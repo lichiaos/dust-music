@@ -1573,10 +1573,10 @@ bcrypt-pbkdf@^1.0.0:
   dependencies:
     tweetnacl "^0.14.3"
 
-better-scroll@^1.15.2:
-  version "1.15.2"
-  resolved "https://registry.npm.taobao.org/better-scroll/download/better-scroll-1.15.2.tgz#65ffc6058b8b4ff337b8dfad4bcb334d7699ceb6"
-  integrity sha1-Zf/GBYuLT/M3uN+tS8szTXaZzrY=
+better-scroll@^0.1.15:
+  version "0.1.15"
+  resolved "https://registry.npm.taobao.org/better-scroll/download/better-scroll-0.1.15.tgz#17bd5fc175d2fb422d370163c8ab9e28729b2fc1"
+  integrity sha1-F71fwXXS+0ItNwFjyKueKHKbL8E=
   dependencies:
     babel-runtime "^6.0.0"
 
@@ -2173,6 +2173,13 @@ commander@^2.14.1, commander@^2.18.0, commander@^2.20.0, commander@^2.9.0:
   version "2.20.0"
   resolved "https://registry.npm.taobao.org/commander/download/commander-2.20.0.tgz?cache=0&sync_timestamp=1565398176321&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fcommander%2Fdownload%2Fcommander-2.20.0.tgz#d58bb2b5c1ee8f87b0d340027e9e94e222c5a422"
   integrity sha1-1YuytcHuj4ew00ACfp6U4iLFpCI=
+
+commander@~1.1.1:
+  version "1.1.1"
+  resolved "https://registry.npm.taobao.org/commander/download/commander-1.1.1.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fcommander%2Fdownload%2Fcommander-1.1.1.tgz#50d1651868ae60eccff0a2d9f34595376bc6b041"
+  integrity sha1-UNFlGGiuYOzP8KLZ80WVN2vGsEE=
+  dependencies:
+    keypress "0.1.x"
 
 commander@~2.19.0:
   version "2.19.0"
@@ -4959,6 +4966,11 @@ jsprim@^1.2.2:
     json-schema "0.2.3"
     verror "1.10.0"
 
+keypress@0.1.x:
+  version "0.1.0"
+  resolved "https://registry.npm.taobao.org/keypress/download/keypress-0.1.0.tgz#4a3188d4291b66b4f65edb99f806aa9ae293592a"
+  integrity sha1-SjGI1CkbZrT2XtuZ+AaqmuKTWSo=
+
 killable@^1.0.1:
   version "1.0.1"
   resolved "https://registry.npm.taobao.org/killable/download/killable-1.0.1.tgz#4c8ce441187a061c7474fb87ca08e2a638194892"
@@ -5576,7 +5588,7 @@ mz@^2.4.0:
     object-assign "^4.0.1"
     thenify-all "^1.0.0"
 
-nan@^2.12.1:
+nan@^2.12.1, nan@^2.14.0:
   version "2.14.0"
   resolved "https://registry.npm.taobao.org/nan/download/nan-2.14.0.tgz#7818f722027b2459a86f0295d434d1fc2336c52c"
   integrity sha1-eBj3IgJ7JFmobwKV1DTR/CM2xSw=
@@ -5699,6 +5711,13 @@ node-releases@^1.1.25:
   integrity sha1-UDw8cNDkcyuE56qikl+93hBILUo=
   dependencies:
     semver "^5.3.0"
+
+nodejieba@^2.2.1:
+  version "2.3.1"
+  resolved "https://registry.npm.taobao.org/nodejieba/download/nodejieba-2.3.1.tgz#8e67ff9fcd8c6b9cb15beb2d8ea0310225ea47e2"
+  integrity sha1-jmf/n82Ma5yxW+stjqAxAiXqR+I=
+  dependencies:
+    nan "^2.14.0"
 
 nopt@^4.0.1:
   version "4.0.1"
@@ -6283,6 +6302,16 @@ pinkie@^2.0.0:
   version "2.0.4"
   resolved "https://registry.npm.taobao.org/pinkie/download/pinkie-2.0.4.tgz#72556b80cfa0d48a974e80e77248e80ed4f7f870"
   integrity sha1-clVrgM+g1IqXToDnckjoDtT3+HA=
+
+pinyin@^2.9.0:
+  version "2.9.0"
+  resolved "https://registry.npm.taobao.org/pinyin/download/pinyin-2.9.0.tgz#1e77025bf4fafdad4ea410022837b5f97e53aab1"
+  integrity sha1-HncCW/T6/a1OpBACKDe1+X5TqrE=
+  dependencies:
+    commander "~1.1.1"
+    object-assign "^4.0.1"
+  optionalDependencies:
+    nodejieba "^2.2.1"
 
 pkg-dir@^1.0.0:
   version "1.0.0"
@@ -8458,6 +8487,11 @@ vue-hot-reload-api@^2.3.0:
   version "2.3.3"
   resolved "https://registry.npm.taobao.org/vue-hot-reload-api/download/vue-hot-reload-api-2.3.3.tgz#2756f46cb3258054c5f4723de8ae7e87302a1ccf"
   integrity sha1-J1b0bLMlgFTF9HI96K5+hzAqHM8=
+
+vue-lazyload@1.0.3:
+  version "1.0.3"
+  resolved "https://registry.npm.taobao.org/vue-lazyload/download/vue-lazyload-1.0.3.tgz?cache=0&sync_timestamp=1565348603567&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fvue-lazyload%2Fdownload%2Fvue-lazyload-1.0.3.tgz#6bd881a5bf3c681e74e86190094cad104bc403fa"
+  integrity sha1-a9iBpb88aB506GGQCUytEEvEA/o=
 
 vue-loader@^15.7.0:
   version "15.7.1"

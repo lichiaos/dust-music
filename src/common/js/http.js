@@ -1,48 +1,49 @@
-import axios from "axios";
-const CancelToken = axios.CancelToken;
+import axios from 'axios'
 
-const baseURL = "http://localhost:3000";
+const baseURL = 'http://localhost:3000'
 let instance = axios.create({
   baseURL,
-  timeout: 5000
-});
+  timeout: 5000,
+})
 
 instance.interceptors.response.use(
   res => (res.status === 200 ? Promise.resolve(res.data) : Promise.reject(res)),
   error => {
-    const { response } = error;
-    return Promise.reject(response);
-  }
-);
+    const { response } = error
+    return Promise.reject(response)
+  },
+)
 
 export function get(url, param) {
   return new Promise((resolve, reject) => {
     instance({
-      method: "get",
+      method: 'get',
       url,
-      params: param
+      params: param,
     })
       .then(res => {
         //axios返回的是一个promise对象
-        resolve(res); //resolve在promise执行器内部
+        resolve(res) //resolve在promise执行器内部
       })
       .catch(err => {
-        console.log(err, "异常");
-      });
-  });
+        console.log(err, '异常')
+        reject(err)
+      })
+  })
 }
 export function post(url, param) {
   return new Promise((resolve, reject) => {
     instance({
-      method: "post",
+      method: 'post',
       url,
-      data: param
+      data: param,
     })
       .then(res => {
-        resolve(res);
+        resolve(res)
       })
       .catch(err => {
-        console.log(err, "异常");
-      });
-  });
+        console.log(err, '异常')
+        reject(err)
+      })
+  })
 }

@@ -2,18 +2,20 @@
   <div id="app">
     <m-header></m-header>
     <tab></tab>
-    <router-view></router-view>
+    <keep-alive>
+      <router-view></router-view>
+    </keep-alive>
   </div>
 </template>
 <script>
-import MHeader from "@/components/m-header/m-header";
-import Tab from "@/components/tab";
+import MHeader from '@/components/m-header/m-header'
+import Tab from '@/components/tab'
 export default {
   components: {
     MHeader,
-    Tab
-  }
-};
+    Tab,
+  },
+}
 </script>
 <style lang="stylus">
   @import "~@/common/stylus/variable"

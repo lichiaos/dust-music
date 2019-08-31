@@ -10,20 +10,20 @@ export default {
   props: {
     probeType: {
       type: Number,
-      default: 1,
+      default: 1
     },
     click: {
       type: Boolean,
-      default: true,
+      default: true
     },
     data: {
       type: Array,
-      default: null,
+      default: null
     },
     listenScroll: {
       type: Boolean,
-      default: false,
-    },
+      default: false
+    }
   },
   mounted() {
     setTimeout(() => {
@@ -35,7 +35,7 @@ export default {
       if (!this.$refs.wrapper) return
       this.scroll = new BScroll(this.$refs.wrapper, {
         probeType: this.probeType,
-        click: this.click,
+        click: this.click
       })
       if (this.listenScroll) {
         this.scroll.on('scroll', pos => {
@@ -57,15 +57,15 @@ export default {
     },
     scrollToElement() {
       this.scroll && this.scroll.scrollToElement.apply(this.scroll, arguments)
-    },
+    }
   },
   watch: {
     data() {
       setTimeout(() => {
         this._initScroll()
       }, 20)
-    },
-  },
+    }
+  }
 }
 </script>
 

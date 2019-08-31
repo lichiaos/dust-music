@@ -4,3 +4,8 @@ import { get } from '@/common/js/http'
 export function getSinner() {
   return get('/toplist/artist')
 }
+
+// 歌手详情
+export function getSingerDetail(id) {
+  return get('/artists', { id })
+}

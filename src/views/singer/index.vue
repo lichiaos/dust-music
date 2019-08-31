@@ -1,6 +1,7 @@
 <template>
   <div class="sinner">
-    <list-view :data="singers"></list-view>
+    <list-view :data="singers" @select="selectSinger"></list-view>
+    <router-view></router-view>
   </div>
 </template>
 
@@ -8,18 +9,27 @@
 import { getSinner } from '../../api/singer'
 import convertChinese from '@/common/js/pinyin'
 import ListView from '@/base/listView'
+import { mapMutations } from 'vuex'
+
 const HOT_NAME = '热门'
 const HOT_SINGER_LEN = 10
 export default {
   data() {
     return {
-      singers: [],
+      singers: []
     }
   },
   created() {
     this._getSingerList()
   },
   methods: {
+    ...mapMutations(['SET_SINGER']),
+    selectSinger(item) {
+      this.$router.push({
+        path: '/singer/' + item.id + ''
+      })
+      this.SET_SINGER(item)
+    },
     _getSingerList() {
       getSinner().then(res => {
         this.singers = this._normalizeSinger(res.list.artists)
@@ -29,28 +39,28 @@ export default {
       let map = {
         hot: {
           title: HOT_NAME,
-          items: [],
-        },
+          items: []
+        }
       }
       list.forEach((item, index) => {
         if (index < HOT_SINGER_LEN) {
           map.hot.items.push({
             id: item.id,
             name: item.name,
-            avatar: item.picUrl,
+            avatar: item.picUrl
           })
         }
         const key = convertChinese(item.name).substring(0, 1)
         if (!map[key]) {
           map[key] = {
             title: key,
-            items: [],
+            items: []
           }
         }
         map[key].items.push({
           id: item.id,
           name: item.name,
-          avatar: item.picUrl,
+          avatar: item.picUrl
         })
       })
       let hot = []
@@ -64,11 +74,11 @@ export default {
       })
       ret.sort((a, b) => a.title.charCodeAt(0) - b.title.charCodeAt(0))
       return hot.concat(ret)
-    },
+    }
   },
   components: {
-    ListView,
-  },
+    ListView
+  }
 }
 </script>
 

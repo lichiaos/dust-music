@@ -3,7 +3,7 @@ import axios from 'axios'
 const baseURL = 'http://localhost:3000'
 let instance = axios.create({
   baseURL,
-  timeout: 5000,
+  timeout: 5000
 })
 
 instance.interceptors.response.use(
@@ -11,7 +11,7 @@ instance.interceptors.response.use(
   error => {
     const { response } = error
     return Promise.reject(response)
-  },
+  }
 )
 
 export function get(url, param) {
@@ -19,7 +19,7 @@ export function get(url, param) {
     instance({
       method: 'get',
       url,
-      params: param,
+      params: param
     })
       .then(res => {
         //axios返回的是一个promise对象
@@ -36,7 +36,7 @@ export function post(url, param) {
     instance({
       method: 'post',
       url,
-      data: param,
+      data: param
     })
       .then(res => {
         resolve(res)

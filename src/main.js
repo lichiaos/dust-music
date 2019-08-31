@@ -10,11 +10,11 @@ Vue.config.productionTip = false
 fastclick.attach(document.body)
 
 Vue.use(VueLazyLoad, {
-  loading: require('./common/image/default.png'),
+  loading: require('./common/image/default.png')
 })
 
 new Vue({
   router,
   store,
-  render: h => h(App),
+  render: h => h(App)
 }).$mount('#app')

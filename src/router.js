@@ -9,23 +9,29 @@ export default new Router({
   routes: [
     {
       path: '/',
-      redirect: '/recommend',
+      redirect: '/recommend'
     },
     {
       path: '/recommend',
-      component: Recommend,
+      component: Recommend
     },
     {
       path: '/singer',
-      component: () => import(/* webpackChunkName: "about" */ './views/singer'),
+      component: () => import(/* webpackChunkName: "singer" */ './views/singer'),
+      children: [
+        {
+          path: ':id',
+          component: () => import(/* webpackChunkName: "search" */ './components/singer-detail')
+        }
+      ]
     },
     {
       path: '/rank',
-      component: () => import(/* webpackChunkName: "about" */ './views/rank'),
+      component: () => import(/* webpackChunkName: "rank" */ './views/rank')
     },
     {
       path: '/search',
-      component: () => import(/* webpackChunkName: "about" */ './views/search'),
-    },
-  ],
+      component: () => import(/* webpackChunkName: "search" */ './views/search')
+    }
+  ]
 })

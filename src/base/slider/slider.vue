@@ -22,21 +22,21 @@ export default {
   props: {
     loop: {
       type: Boolean,
-      default: true,
+      default: true
     },
     autoPlay: {
       type: Boolean,
-      default: true,
+      default: true
     },
     interval: {
       type: Number,
-      default: 4000,
-    },
+      default: 4000
+    }
   },
   data() {
     return {
       dots: [],
-      currentPageIndex: 0,
+      currentPageIndex: 0
     }
   },
   mounted() {
@@ -82,7 +82,7 @@ export default {
         snap: true,
         snapLoop: this.loop,
         snapThreshold: 0.3,
-        snapSpeed: 400,
+        snapSpeed: 400
       })
       this.slider.on('scrollEnd', () => {
         let pageIndex = this.slider.getCurrentPage().pageX
@@ -102,8 +102,8 @@ export default {
       this.timer = setTimeout(() => {
         this.slider.goToPage(pageIndex, 0, 400)
       }, this.interval)
-    },
-  },
+    }
+  }
 }
 </script>
 

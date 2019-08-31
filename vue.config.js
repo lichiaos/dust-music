@@ -1,5 +1,19 @@
+var path = require('path')
+function resolve(dir) {
+  console.log(__dirname)
+  return path.join(__dirname, dir)
+}
 module.exports = {
-  // devServer: {
-  //   //   proxy: 'http://localhost:4000'
-  //   // }
+  chainWebpack: config => {
+    config.resolve.alias
+      .set('common', resolve('src/common'))
+      .set('components', resolve('src/components'))
+      .set('base', resolve('src/base'))
+  },
+  pluginOptions: {
+    'style-resources-loader': {
+      preProcessor: 'stylus',
+      patterns: [resolve('src/common/stylus/variable'), resolve('src/common/stylus/mixin')]
+    }
+  }
 }

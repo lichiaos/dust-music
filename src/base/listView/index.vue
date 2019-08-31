@@ -7,18 +7,14 @@
     @scroll="scroll"
   >
     <ul>
-      <li
-        v-for="(group, index) in data"
-        :key="index"
-        class="list-group"
-        ref="listGroup"
-      >
+      <li v-for="(group, index) in data" :key="index" class="list-group" ref="listGroup">
         <h2 class="list-group-title">{{ group.title }}</h2>
         <uL>
           <li
             v-for="(item, index) in group.items"
             :key="index"
             class="list-group-item"
+            @click="selectItem(item)"
           >
             <img class="avatar" v-lazy="item.avatar" />
             <span class="name">{{ item.name }}</span>
@@ -43,13 +39,21 @@
         </li>
       </ul>
     </div>
+    <div class="list-fixed" v-show="fixedTitle" ref="fixed">
+      <h1 class="fixed-title">{{ fixedTitle }}</h1>
+    </div>
+    <div class="loading-container" v-show="!data.length">
+      <loading></loading>
+    </div>
   </scroll>
 </template>
 
 <script>
 import Scroll from '@/base/scroll'
+import loading from '@/base/loading/loading'
 import { getData } from '../../common/js/dom'
 const ANCHOR_HEIGHT = 18
+const TITLE_HEIGHT = 30
 export default {
   created() {
     this.touch = {}
@@ -60,21 +64,29 @@ export default {
   props: {
     data: {
       type: Array,
-      default: () => [],
-    },
+      default: () => []
+    }
   },
   data() {
     return {
       scrollY: -1,
       currentIndex: 0,
+      diff: -1
     }
   },
   computed: {
     shortcutList() {
       return this.data.map(group => group.title.substr(0, 1))
     },
+    fixedTitle() {
+      if (this.scrollY > 0) return ''
+      return this.data[this.currentIndex] ? this.data[this.currentIndex].title : ''
+    }
   },
   methods: {
+    selectItem(item) {
+      this.$emit('select', item)
+    },
     onShortcutStart(el) {
       let anchorIndex = getData(el.target, 'index')
       let firstTouch = el.touches[0]
@@ -110,7 +122,7 @@ export default {
         height += item.clientHeight
         this.listHeight.push(height)
       }
-    },
+    }
   },
   watch: {
     data() {
@@ -119,7 +131,6 @@ export default {
       }, 20)
     },
     scrollY(newY) {
-      console.log(newY)
       const listHeight = this.listHeight
       // 滚到顶部的时候
       if (newY > 0) {
@@ -132,17 +143,27 @@ export default {
         let height2 = listHeight[i + 1]
         if (-newY >= height1 && -newY < height2) {
           this.currentIndex = i
-          console.log(this.currentIndex)
+          this.diff = height2 + newY
           return
         }
       }
       // 滚动最低部
       this.currentIndex = listHeight.length - 2
     },
+    // 元素高度 - 滚动高度
+    diff(newVal) {
+      console.log(newVal)
+      let fixedTop = newVal > 0 && newVal < TITLE_HEIGHT ? newVal - TITLE_HEIGHT : 0
+      if (fixedTop === this.fixedTop) return
+      this.fixedTop = fixedTop
+      console.log(fixedTop)
+      this.$refs.fixed.style.transform = `translate3d(0, ${fixedTop}px, 0)`
+    }
   },
   components: {
     Scroll,
-  },
+    loading
+  }
 }
 </script>
 

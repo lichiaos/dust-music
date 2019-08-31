@@ -43,7 +43,7 @@ export default {
   data() {
     return {
       recommends: [],
-      discList: [],
+      discList: []
     }
   },
   created() {
@@ -66,13 +66,13 @@ export default {
         this.checkloaded = true
         this.$refs.scroll.refresh()
       }
-    },
+    }
   },
   components: {
     Slider,
     Scroll,
-    Loading,
-  },
+    Loading
+  }
 }
 </script>
 

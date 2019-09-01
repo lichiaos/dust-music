@@ -1,5 +1,7 @@
+import { getLyric } from 'api/song'
+
 export default class Song {
-  constructor({ id, mid, singer, name, album, duration, image }) {
+  constructor({ id, mid, singer, name, album, duration, image, url }) {
     this.id = id
     this.mid = mid
     this.singer = singer
@@ -7,6 +9,18 @@ export default class Song {
     this.album = album
     this.duration = duration
     this.image = image
+    this.url = url
+  }
+  getLyric() {
+    if (this.lyric) return Promise.resolve(this.lyric)
+    return new Promise((resolve, reject) => {
+      getLyric(this.id)
+        .then(res => {
+          this.lyric = res.lrc.lyric
+          resolve(this.lyric)
+        })
+        .catch(e => reject(e))
+    })
   }
 }
 
@@ -18,7 +32,8 @@ export function createSong(musicData) {
     name: musicData.name,
     album: musicData.al.name,
     duration: musicData.dt,
-    image: musicData.al.picUrl
+    image: musicData.al.picUrl,
+    url: `http://music.163.com/song/media/outer/url?id=${musicData.id}.mp3`
   })
 }
 

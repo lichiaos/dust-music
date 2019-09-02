@@ -1,90 +1,132 @@
+const timeExp = /\[(\d{2,}):(\d{2})(?:\.(\d{2,3}))?]/g
+
+const STATE_PAUSE = 0
+const STATE_PLAYING = 1
+
+const tagRegMap = {
+  title: 'ti',
+  artist: 'ar',
+  album: 'al',
+  offset: 'offset',
+  by: 'by'
+}
+
+function noop() {}
+
 export default class Lyric {
-  constructor(data) {
-    this.data = data
-    this.lrc = data['lrc']['lyric']
-    this.tlyric = data['tlyric']['lyric']
+  constructor(lrc, hanlder = noop) {
+    this.lrc = lrc
+    this.tags = {}
+    this.lines = []
+    this.handler = hanlder
+    this.state = STATE_PAUSE
+    this.curLine = 0
 
-    this.lrcMap = this.getLyricMap(this.lrc)
-    this.finalLrcMap = this.convertProp(Object.assign({}, this.lrcMap))
-
-    this.tlyricMap = this.getLyricMap(this.tlyric)
-    this.finalTlyricMap = this.convertProp(Object.assign({}, this.tlyricMap))
+    this._init()
   }
 
-  getLyricMap(lrc) {
-    let key, value, sIdx, eIdx, nsIdx
-    let ret = {}
-    if (!lrc || typeof lrc !== 'string') return ret
+  _init() {
+    this._initTag()
 
-    while (lrc) {
-      sIdx = lrc.indexOf('[')
-      eIdx = lrc.indexOf(']') + 1
-      if (sIdx !== -1 && eIdx !== -1) {
-        key = lrc.slice(sIdx, eIdx)
-        advance(eIdx)
-        nsIdx = lrc.indexOf('[')
-        value = lrc.slice(0, nsIdx)
-        ret[key] = value.trim()
-        advance(nsIdx)
-      } else {
-        break
+    this._initLines()
+  }
+
+  _initTag() {
+    for (let tag in tagRegMap) {
+      const matches = this.lrc.match(new RegExp(`\\[${tagRegMap[tag]}:([^\\]]*)]`, 'i'))
+      this.tags[tag] = (matches && matches[1]) || ''
+    }
+  }
+
+  _initLines() {
+    const lines = this.lrc.split('\n')
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i]
+      let result = timeExp.exec(line)
+      if (result) {
+        const txt = line.replace(timeExp, '').trim()
+        if (txt) {
+          this.lines.push({
+            time: result[1] * 60 * 1000 + result[2] * 1000 + (result[3] || 0) * 1,
+            txt
+          })
+        }
       }
     }
 
-    function advance(n) {
-      lrc = lrc.substring(n)
-    }
-    return ret
-  }
-
-  convertProp(obj) {
-    Object.keys(obj).forEach(str => {
-      if (!obj[str]) {
-        delete obj[str]
-      } else {
-        let prop = f(str)
-        obj[prop] = obj[str]
-        delete obj[str]
-      }
+    this.lines.sort((a, b) => {
+      return a.time - b.time
     })
-
-    function f(str) {
-      str = str.match(/^\[(\d+):(\d+)\.(\d+)/)
-      return Number(str[1]) * 60 * 1000 + Number(str[2]) * 1000 + Number(str[3])
-    }
-    return obj
   }
 
-  getCurPlayLyric(audioCurTime) {
-    let audioCurTimeMs = audioCurTime * 1000
-    let arrTime = Object.keys(this.finalLrcMap)
-
-    let i = 0,
-      len = arrTime.length,
-      idx
-    let hasTranslate = Object.keys(this.finalTlyricMap).length > 0
-
-    if (audioCurTimeMs === 0) {
-      return g.call(this, arrTime[0])
-    }
-    if (audioCurTimeMs >= Number(arrTime[len - 1])) {
-      return g.call(this, arrTime[len - 1])
-    }
-    for (; i < len; i++) {
-      if (audioCurTimeMs >= Number(arrTime[i - 1]) && audioCurTimeMs < Number(arrTime[i])) {
-        idx = i - 1
-        break
+  _findCurNum(time) {
+    for (let i = 0; i < this.lines.length; i++) {
+      if (time <= this.lines[i].time) {
+        return i
       }
     }
-    return g.call(this, arrTime[idx])
+    return this.lines.length - 1
+  }
 
-    function g(prop) {
-      return hasTranslate
-        ? v(this.finalLrcMap[prop]) + '\n' + v(this.finalTlyricMap[prop])
-        : v(this.finalLrcMap[prop])
+  _callHandler(i) {
+    if (i < 0) {
+      return
     }
-    function v(val) {
-      return typeof val === 'undefined' ? '' : val
+    this.handler({
+      lineNum: i,
+      txt: this.lines[i].txt
+    })
+  }
+
+  _playRest() {
+    let line = this.lines[this.curNum]
+    let delay = line.time - (+new Date() - this.startStamp)
+
+    this.timer = setTimeout(() => {
+      this._callHandler(this.curNum++)
+      if (this.curNum < this.lines.length && this.state === STATE_PLAYING) {
+        this._playRest()
+      }
+    }, delay)
+  }
+
+  play(startTime = 0, skipLast) {
+    if (!this.lines.length) {
+      return
     }
+    this.state = STATE_PLAYING
+
+    this.curNum = this._findCurNum(startTime)
+    this.startStamp = +new Date() - startTime
+
+    if (!skipLast) {
+      this._callHandler(this.curNum - 1)
+    }
+
+    if (this.curNum < this.lines.length) {
+      clearTimeout(this.timer)
+      this._playRest()
+    }
+  }
+
+  togglePlay() {
+    var now = +new Date()
+    if (this.state === STATE_PLAYING) {
+      this.stop()
+      this.pauseStamp = now
+    } else {
+      this.state = STATE_PLAYING
+      this.play((this.pauseStamp || now) - (this.startStamp || now), true)
+      this.pauseStamp = 0
+    }
+  }
+
+  stop() {
+    this.state = STATE_PAUSE
+    clearTimeout(this.timer)
+  }
+
+  seek(offset) {
+    this.play(offset)
   }
 }

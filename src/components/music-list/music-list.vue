@@ -38,11 +38,13 @@ import Loading from 'base/loading/loading'
 import SongList from 'base/song-list/song-list'
 import { prefixStyle } from 'common/js/dom'
 import { mapActions } from 'vuex'
+import { playlistMixin } from 'common/js/mixin'
 
 const RESERVE_HEIGHT = 40
 const transform = prefixStyle('transform')
 export default {
   name: 'music-list',
+  mixins: [playlistMixin],
   props: {
     bgImage: {
       type: String,
@@ -77,6 +79,12 @@ export default {
     this.$refs.scroll.$el.style.top = `${this.imageHeight}px`
   },
   methods: {
+    handlerPlaylist(playlist) {
+      if (!playlist) return
+      const bottom = playlist.length ? '60px' : ''
+      this.$refs.scroll.$el.style.bottom = bottom
+      this.$refs.scroll.refresh()
+    },
     random() {
       console.log('点击了')
       this.randomPlay(this.songs)

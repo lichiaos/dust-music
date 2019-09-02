@@ -38,8 +38,10 @@ import { getRecommend, getResource } from '@/api/recommend'
 import Slider from '@/base/slider/slider'
 import Loading from '@/base/loading/loading'
 import Scroll from '@/base/scroll'
+import { playlistMixin } from 'common/js/mixin'
 
 export default {
+  mixins: [playlistMixin],
   data() {
     return {
       recommends: [],
@@ -51,6 +53,12 @@ export default {
     this._getDiscList({ limit: 20 })
   },
   methods: {
+    handlerPlaylist(playlist) {
+      if (!playlist) return
+      const bottom = playlist.length ? '60px' : ''
+      this.$refs.recommend.style.bottom = bottom
+      this.$refs.scroll.refresh()
+    },
     _getRecommend() {
       getRecommend().then(res => {
         this.recommends = res.banners

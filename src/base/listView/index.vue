@@ -87,6 +87,9 @@ export default {
     selectItem(item) {
       this.$emit('select', item)
     },
+    refresh() {
+      this.$refs.listview.refresh()
+    },
     onShortcutStart(el) {
       let anchorIndex = getData(el.target, 'index')
       let firstTouch = el.touches[0]

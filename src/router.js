@@ -13,7 +13,13 @@ export default new Router({
     },
     {
       path: '/recommend',
-      component: Recommend
+      component: Recommend,
+      children: [
+        {
+          path: ':id',
+          component: () => import(/* webpackChunkName: "recommend" */ './components/disc/disc')
+        }
+      ]
     },
     {
       path: '/singer',
@@ -27,7 +33,13 @@ export default new Router({
     },
     {
       path: '/rank',
-      component: () => import(/* webpackChunkName: "rank" */ './views/rank')
+      component: () => import(/* webpackChunkName: "rank" */ './views/rank'),
+      children: [
+        {
+          path: ':id',
+          component: () => import(/* webpackChunkName: "rank" */ './components/top-list/top-list')
+        }
+      ]
     },
     {
       path: '/search',

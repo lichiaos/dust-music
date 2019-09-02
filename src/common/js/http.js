@@ -14,12 +14,12 @@ instance.interceptors.response.use(
   }
 )
 
-export function get(url, param) {
+export function get(url, params) {
   return new Promise((resolve, reject) => {
     instance({
       method: 'get',
       url,
-      params: param
+      params
     })
       .then(res => {
         //axios返回的是一个promise对象
@@ -31,12 +31,12 @@ export function get(url, param) {
       })
   })
 }
-export function post(url, param) {
+export function post(url, data) {
   return new Promise((resolve, reject) => {
     instance({
       method: 'post',
       url,
-      data: param
+      data
     })
       .then(res => {
         resolve(res)

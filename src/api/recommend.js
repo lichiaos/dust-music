@@ -9,3 +9,7 @@ export function getRecommend() {
 export function getResource(param) {
   return get('/top/playlist/highquality', param)
 }
+
+export function getDisc(id) {
+  return get('/playlist/detail', { id })
+}

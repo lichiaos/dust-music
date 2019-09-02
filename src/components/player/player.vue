@@ -27,7 +27,7 @@
           <div class="middle-l" ref="middleL">
             <div class="cd-wrapper" ref="cdWrapper">
               <div class="cd" :class="cdClass">
-                <img class="image" alt="image" :src="currentSong.image" />
+                <img class="image" alt="image" :src="currentSong.image || defaultImg" />
               </div>
             </div>
             <div class="playing-lyric-wrapper">
@@ -90,7 +90,7 @@
             width="40"
             height="40"
             alt="icon"
-            :src="currentSong.image"
+            :src="currentSong.image || defaultImg"
             οnerrοr="errorImg(this)"
           />
         </div>
@@ -129,6 +129,7 @@ import Lyric from 'common/js/lyric'
 import ProgressBar from 'base/progress-bar/progress-bar'
 import ProgressCircle from 'base/progress-circle/progress-circle'
 import Scroll from 'base/scroll'
+import defaultImg from 'common/image/default.png'
 
 const transform = prefixStyle('transform')
 const transitionDuration = prefixStyle('transitionDuration')
@@ -142,7 +143,8 @@ export default {
       currentLyric: null,
       currentLineNum: 0,
       currentShow: 'cd',
-      playingLyric: ''
+      playingLyric: '',
+      defaultImg
     }
   },
   computed: {

@@ -37,7 +37,20 @@ export function createSong(musicData) {
   })
 }
 
-export function mapName(singer) {
+export function createSearchSong(musicData) {
+  return new Song({
+    id: musicData.id,
+    mid: musicData.album.id,
+    singer: mapName(musicData.artists),
+    name: musicData.name,
+    album: musicData.album.name,
+    duration: musicData.duration / 1000,
+    image: musicData.album.img1v1Url,
+    url: `http://music.163.com/song/media/outer/url?id=${musicData.id}.mp3`
+  })
+}
+
+function mapName(singer) {
   if (!singer) return ''
   return singer.map(k => k.name).join('/')
 }

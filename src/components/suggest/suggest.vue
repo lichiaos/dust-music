@@ -6,7 +6,7 @@
           <i class="icon-music"></i>
         </div>
         <div class="name">
-          <p class="text">{{ getSongText(item) }}</p>
+          <p class="text">{{ item.name }}</p>
         </div>
       </li>
     </div>
@@ -15,7 +15,7 @@
 
 <script>
 import { getSearchRes } from 'api/search'
-import { mapName } from 'common/js/song'
+import { createSearchSong } from 'common/js/song'
 import { debounce } from 'common/js/util'
 
 const LIMIT = 30
@@ -44,15 +44,22 @@ export default {
         limit: LIMIT * this.page
       }
       getSearchRes(param).then(res => {
-        this.songs = res.result.songs
+        this.songs = this._normalizeSongs(res.result.songs)
       })
     },
-    getSongText(song) {
-      return `${song.name}-${mapName(song.artists)}`
+    _normalizeSongs(list) {
+      let ret = []
+      list.forEach(item => {
+        if (item.id && item.album.id) {
+          ret.push(createSearchSong(item))
+        }
+      })
+      return ret
     }
   },
   watch: {
     query(newQuery) {
+      if (!newQuery) return
       debounce(this.search(newQuery), 500)
     }
   }

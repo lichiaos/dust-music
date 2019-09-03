@@ -4,6 +4,6 @@ export function getHotKey() {
   return get('/search/hot')
 }
 
-export function getSearchRes(keywords, limit = 30) {
-  return get('/search', { keywords, limit })
+export function getSearchRes({ keywords, offset = 1 }) {
+  return get('/search', { keywords, offset })
 }

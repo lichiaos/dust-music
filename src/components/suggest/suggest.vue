@@ -1,23 +1,27 @@
 <template>
-  <div class="suggest">
+  <scroll class="suggest" :data="songs" pullup @scrollToEnd="searchMore" ref="scroll">
     <div class="suggest-list">
       <li class="suggest-item" v-for="(item, index) in songs" :key="index">
         <div class="icon">
           <i class="icon-music"></i>
         </div>
         <div class="name">
-          <p class="text">{{ item.name }}</p>
+          <p class="text">{{ item.name }} - {{ item.singer }}</p>
         </div>
       </li>
+      <loading :title="'拼命加载中'" v-show="hasMore"></loading>
     </div>
-  </div>
+  </scroll>
 </template>
 
 <script>
 import { getSearchRes } from 'api/search'
 import { createSearchSong } from 'common/js/song'
 import { debounce } from 'common/js/util'
+import Scroll from 'base/scroll'
+import Loading from 'base/loading/loading'
 
+const OFFSET = 1
 const LIMIT = 30
 export default {
   name: 'seggest',
@@ -34,17 +38,36 @@ export default {
   data() {
     return {
       page: 1,
-      songs: []
+      songs: [],
+      hasMore: true
     }
   },
   methods: {
-    search(keyword = this.query) {
-      const param = {
-        keyword,
-        limit: LIMIT * this.page
-      }
-      getSearchRes(param).then(res => {
-        this.songs = this._normalizeSongs(res.result.songs)
+    search(keywords = this.query) {
+      this.hasMore = true
+      this.$refs.scroll.scrollTo(0, 0)
+      this.page = 1
+      getSearchRes({
+        keywords,
+        offset: OFFSET * this.page
+      }).then(res => {
+        if (res.result.songs) {
+          this.songs = this._normalizeSongs(res.result.songs)
+          this._checkHasMore(res.result)
+        }
+      })
+    },
+    searchMore() {
+      if (!this.hasMore) return
+      this.page++
+      getSearchRes({
+        keywords: this.query,
+        offset: OFFSET * this.page
+      }).then(res => {
+        if (res.result.songs) {
+          this.songs = this.songs.concat(this._normalizeSongs(res.result.songs))
+          this._checkHasMore(res.result)
+        }
       })
     },
     _normalizeSongs(list) {
@@ -55,13 +78,23 @@ export default {
         }
       })
       return ret
+    },
+    _checkHasMore(res) {
+      if (!res.songs || this.page * LIMIT >= res.songCount) {
+        this.hasMore = false
+      }
     }
   },
   watch: {
     query(newQuery) {
       if (!newQuery) return
+      this.songs = []
       debounce(this.search(newQuery), 500)
     }
+  },
+  components: {
+    Scroll,
+    Loading
   }
 }
 </script>

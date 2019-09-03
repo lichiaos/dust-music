@@ -37,7 +37,7 @@ export function createSong(musicData) {
   })
 }
 
-function mapName(singer) {
+export function mapName(singer) {
   if (!singer) return ''
   return singer.map(k => k.name).join('/')
 }

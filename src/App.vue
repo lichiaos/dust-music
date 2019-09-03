@@ -21,8 +21,4 @@ export default {
   }
 }
 </script>
-<style lang="stylus">
-#app {
-  color: $color-theme
-}
-</style>
+<style lang="stylus"></style>

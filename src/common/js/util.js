@@ -18,3 +18,15 @@ export function shuffle(arr) {
   }
   return _arr
 }
+
+export function debounce(fn, delay) {
+  let timer
+  return () => {
+    if (timer) {
+      clearTimeout(timer)
+    }
+    timer = setTimeout(() => {
+      fn()
+    }, delay)
+  }
+}
